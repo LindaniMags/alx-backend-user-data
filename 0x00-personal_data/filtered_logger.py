@@ -17,7 +17,7 @@ class RedactingFormatter(logging.Formatter):
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
-    FORMAT_FIELDS = ('name', 'levelname', 'asctime', 'message')
+    FORMAT_FIELDS = ("name", "levelname", "asctime", "message")
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
@@ -33,8 +33,8 @@ class RedactingFormatter(logging.Formatter):
 
 
 patterns = {
-    'extract': lambda x, y: r'(?P<field>{})=[^{}]*'.format('|'.join(x), y),
-    'replace': lambda x: r'\g<field>={}'.format(x),
+    "extract": lambda x, y: r"(?P<field>{})=[^{}]*".format("|".join(x), y),
+    "replace": lambda x: r"\g<field>={}".format(x),
 }
 
 
@@ -65,11 +65,15 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     """
     returns a connector to the database
     """
-    mydb = mysql.connector.connect(
-        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "root"),
-        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
-        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+    user = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    database = os.getenv("PERSONAL_DATA_DB_NAME", "my_db")
+
+    return mysql.connector.connect(
+        user=user,
+        password=password,
+        host=host,
         port=3306,
-        database=os.getenv("PERSONAL_DATA_DB_NAME", "")
+        database=database
     )
-    return mydb
