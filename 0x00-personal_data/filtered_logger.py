@@ -3,6 +3,8 @@
 Regex-ing
 """
 import re
+import os
+import mysql.connector
 import logging
 from typing import List
 
@@ -57,3 +59,16 @@ def get_logger() -> logging.Logger:
     stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
     logger.addHandler(stream_handler)
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    returns a connector to the database
+    """
+    mydb = mysql.connector.connect(
+        host=os.environ.get("PERSONAL_DATA_DB_HOST", "localhost"),
+        user=os.environ.get("PERSONAL_DATA_DB_USERNAME", "root"),
+        password=os.environ.get("PERSONAL_DATA_DB_PASSWORD", ""),
+        database="PERSONAL_DATA_DB_NAME"
+    )
+    return mydb
