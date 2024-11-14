@@ -30,12 +30,13 @@ def decode_base64_authorization_header(
         self, base64_authorization_header: str) -> str:
     """Decodes a Base64 string to a string
     """
-    if base64_authorization_header is None:
-        return None
-    try:
-        return base64.b64decode(base64_authorization_header).decode("utf-8")
-    except Exception:
-        return None
+    if isinstance(base64_authorization_header, str):
+        if base64_authorization_header is None:
+            return None
+        try:
+            return base64.b64decode(base64_authorization_header).decode("utf-8")
+        except Exception:
+            return None
 
 
 def extract_user_credentials(
