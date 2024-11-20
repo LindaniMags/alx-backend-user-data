@@ -4,8 +4,10 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
-class User(declarative_base()):
+
+class User(Base):
     """
     model for a database table named users
     """
