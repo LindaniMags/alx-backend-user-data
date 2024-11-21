@@ -46,13 +46,22 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """
-        Returns the first row found in the users table
+        returns the first row found in the users table
         """
-        for key in kwargs.keys():
-            if not hasattr(User, key):
-                raise InvalidRequestError()
-        user_by = self._session.query(User).filter_by(**kwargs).first()
+        columns = ['id',
+                   'email',
+                   'hashed_password',
+                   'session_id',
+                   'reset_token']
 
-        if user_by is None:
+        for key in kwargs.keys():
+            if key not in columns:
+                raise InvalidRequestError()
+
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound()
+            return user
+        except NoResultFound:
             raise NoResultFound()
-        return user_by
