@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
-from sqlalchemy import create_engine, tuple_
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import InvalidRequestError
@@ -44,14 +44,13 @@ class DB:
             new_user = None
         return new_user
 
-    def find_user_by(self, **kwargs):
-        try:
-            # Assuming self.engine is your SQLAlchemy engine
-            session = self._session
-            query = session.query(User).filter_by(**kwargs)
-            user = query.one()
+    def find_user_by(self, **kwargs) -> User:
+        """Finds a user based on a set of filters.
+        """
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError()
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user:
             return user
-        except NoResultFound:
-            raise NoResultFound()
-        except InvalidRequestError:
-            raise InvalidRequestError()
+        raise NoResultFound()
